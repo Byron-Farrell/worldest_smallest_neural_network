@@ -1,1 +1,1 @@
-# worldest_smallest_neural_network
+# worlds_smallest_neural_network
