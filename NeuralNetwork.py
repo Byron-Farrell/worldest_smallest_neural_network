@@ -1,8 +1,11 @@
+import numpy
+random_number_generator = numpy.random.default_rng()
+
 class NeuralNetwork:
 
     def __init__(self):
-        self.weight = 10
-        self.bias = 5
+        self.weight = random_number_generator.random() * 10
+        self.bias = random_number_generator.random() * 5
         self.learning_rate = 0.01
 
     def feed_forward(self, x):
@@ -34,31 +37,29 @@ class NeuralNetwork:
         self.weight = self.weight - delta_w
         self.bias = self.bias - delta_b
 
+    def evaluation(self, test_inputs, test_outputs):
+        print("Predicted \t|  Expected \t|  Accuracy")
+        print("------------------------------------------")
+        for x, y in zip(test_inputs, test_outputs):
+            predicted = self.feed_forward(x)
+            error = (y - predicted)
 
+            if error < 0:
+                error *= -1
+
+            evaluation = (y - error) / (y / 100)
+
+            print("{:.2f} \t\t|  {:.2f} \t\t|  ({:.2f}%)".format(predicted, y, evaluation))
 
 if __name__ == "__main__":
-    import numpy
-
     net = NeuralNetwork()
-    inputs = numpy.random.uniform(low=1, high=10, size=(1000,))
-    inputs = [int(x) for x in inputs]
+    inputs = random_number_generator.random((100,)) * 10
     outputs = [(2 * x) + 1 for x in inputs]
 
     for x, y in zip(inputs, outputs):
         net.backprop(x, y)
 
-    test_inputs =  [1,2,3,4,5,6,7,8,9,10]
-    test_outputs = [3,5,7,9,11,13,15,17,19,21]
+    test_inputs =  [x for x in range(1, 11)]
+    test_outputs = [(2 * x) + 1 for x in test_inputs]
 
-    print("Predicted \t|  Expected \t|  Accuracy")
-    print("------------------------------------------")
-    for x, y in zip(test_inputs, test_outputs):
-        t = net.feed_forward(x)
-        p = y / 100
-        f = (y - t)
-        if f < 0:
-            f = f * -1
-        f = y - f
-        p = f / p
-
-        print("{:.2f} \t\t|  {:.2f} \t\t|  ({:.2f}%)".format(t, y, p))
+    net.evaluation(test_inputs, test_outputs)
