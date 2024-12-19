@@ -12,21 +12,27 @@ class NeuralNetwork:
         return (x * w) + b
 
 
-    def cost_derivative(self, o, x):
-        return  2 * (o - x)
+    def cost_derivative(self, y, y_hat):
+        return  2 * (y - y_hat)
 
 
     def backprop(self, input, expected_output):
 
         predicted_output = self.feed_forward(input)
 
-        Dc_Dx = self.cost_derivative(predicted_output, expected_output)
+        partialC_partialX = self.cost_derivative(predicted_output, expected_output)
 
-        Df_Dw = Dc_Dx * input
-        Df_Db = Dc_Dx * 1
+        partialF_partialW = input
+        partialF_partialB = 1
 
-        self.weight = self.weight - (self.learning_rate * Df_Dw)
-        self.bias = self.bias - (self.learning_rate * Df_Db)
+        w_gradient = partialC_partialX * partialF_partialW
+        b_gradient = partialC_partialX * partialF_partialB
+
+        delta_w = self.learning_rate * w_gradient
+        delta_b = self.learning_rate * b_gradient
+
+        self.weight = self.weight - delta_w
+        self.bias = self.bias - delta_b
 
 
 
@@ -34,7 +40,7 @@ if __name__ == "__main__":
     import numpy
 
     net = NeuralNetwork()
-    inputs = numpy.random.uniform(low=1, high=10, size=(10,))
+    inputs = numpy.random.uniform(low=1, high=10, size=(1000,))
     inputs = [int(x) for x in inputs]
     outputs = [(2 * x) + 1 for x in inputs]
 
