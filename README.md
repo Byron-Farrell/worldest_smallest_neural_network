@@ -1,5 +1,7 @@
 # worlds_smallest_neural_network
 
+A 1 input 1 output neural network
+
 ### Weighted Sum
 
 - $x$ = input
